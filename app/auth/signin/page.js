@@ -1,18 +1,35 @@
-import { signInWithGoogle } from "@/app/_libs/actions";
+"use client";
+import { supabase } from "@/app/_libs/browser-client";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
 
-function page() {
+function Signin() {
+	const router = useRouter();
+	const signIn = async () => {
+		await supabase.auth.signInWithOAuth({
+			provider: "google",
+			options: {
+				redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+			},
+		});
+		router.refresh();
+	};
 	return (
-		<form action={signInWithGoogle} className="my-10 p-14 flex flex-col items-center border border-[var(--color-one)] rounded-2xl  bg-[var(--color-three)]">
+		<div className="my-10 p-14 flex flex-col items-center border border-[var(--color-one)] rounded-2xl  bg-[var(--color-three)]">
 			<h1 className="text-2xl mb-5">اهلا بك في متجر أبو الدهب</h1>
 			<p className="text-1.5xl mb-20">تسجيل الدخول أو إنشاء حساب</p>
-			<Button  variant="outline" size="lg" className="text-[var(--color-one)] text-1xl font-bold" >
+			<Button
+				onClick={signIn}
+				variant="outline"
+				size="lg"
+				className="text-[var(--color-one)] text-1xl font-bold"
+			>
 				<FaGoogle />
 				المتابعة بأستخدام google
 			</Button>
-		</form>
+		</div>
 	);
 }
 
-export default page;
+export default Signin;

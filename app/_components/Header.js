@@ -2,20 +2,39 @@
 import Image from "next/image";
 import logo from "@/public/logo.jpeg";
 import Link from "next/link";
-import { CircleUserRound, Menu, ShoppingCart } from "lucide-react";
+import {
+	CircleUserRound,
+	LogIn,
+	LogOut,
+	Menu,
+	ShoppingCart,
+} from "lucide-react";
 import { useState } from "react";
-function Header() {
+import { supabase } from "../_libs/browser-client";
+import { useRouter } from "next/navigation";
+import { useSupabaseUser } from "../hooks/useSupabaseUser";
+
+function Header({ initialUser }) {
 	const [isOpen, setIsOpen] = useState(false);
+	const user = useSupabaseUser(initialUser);
+	const router = useRouter();
+	async function signOut() {
+		let { error } = await supabase.auth.signOut();
+		router.push("/products");
+	}
+
 	return (
 		<header className="bg-[var(--color-two)] p-8  flex items-center justify-between ">
-			<div className="flex items-center justify-between gap-3">
-				<Image
-					src={logo}
-					alt="ابو الدهب للتجارة"
-					width="40"
-					height="40"
-					className="rounded-full"
-				/>
+			<div className="flex items-center  gap-3">
+				<Link href="/">
+					<Image
+						src={logo}
+						alt="ابو الدهب للتجارة"
+						width="40"
+						height="40"
+						className="rounded-full"
+					/>
+				</Link>
 				<Menu
 					className="sm:hidden cursor-pointer"
 					onClick={() => setIsOpen(!isOpen)}
@@ -32,19 +51,37 @@ function Header() {
 					<Link href="/products">المنتجات</Link>
 				</li>
 				<li>
-					<Link href="/categories">الفئات</Link>
+					<Link href="/">الصفحة الرئيسية</Link>
 				</li>
 				<li>
 					<Link href="/offers">العروض</Link>
 				</li>
 			</ul>
 			<div className="flex gap-4 ">
-				<Link href="profile">
+				<Link href="profile" title="الملف الشخصي">
 					<CircleUserRound className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
 				</Link>
-				<Link href="cart">
+				<Link href="cart" title="سلة المشتريات">
 					<ShoppingCart className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
 				</Link>
+				{user ? (
+					<button
+						onClick={signOut}
+						type="submit"
+						className="cursur-pointer text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out"
+						title="تسجيل خروج"
+					>
+						<LogOut />
+					</button>
+				) : (
+					<Link
+						title="تسجيل دخول"
+						href="/auth/signin"
+						className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out flex items-center justify-center"
+					>
+						<LogIn />
+					</Link>
+				)}
 			</div>
 		</header>
 	);

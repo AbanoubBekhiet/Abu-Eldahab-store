@@ -1,10 +1,5 @@
-"use server"
+"use server";
 
-import { supabase } from "./supabase";
+import { redirect } from "next/navigation";
+import { supabase } from "./browser-client";
 
-export async function signInWithGoogle() {
-	let { data, error } = await supabase.auth.signInWithOAuth({
-		provider: "google",
-	});
-    
-}

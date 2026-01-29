@@ -1,26 +1,51 @@
+"use client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-export function ProductsFilter() {
+export function ProductsFilter({ categories }) {
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const pathName = usePathname();
+
+	function handleFilter(filter) {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("filter", filter);
+		params.set("search", "لا يوجد");
+		router.replace(`${pathName}?${params.toString()}`, { scroll: false });
+	}
+
 	return (
-		<div className="flex items-center mb-5 justify-around ">
-			<Tabs defaultValue="overview" className="w-[400px] p-5">
-				<TabsList >
-					<TabsTrigger value="كل المنتجات">كل المنتجات</TabsTrigger>
-					<TabsTrigger value="مساحيق ومنظفات">مساحيق ومنظفات</TabsTrigger>
-					<TabsTrigger value="ورقيات">ورقيات</TabsTrigger>
-					<TabsTrigger value="الخردوات">الخردوات</TabsTrigger>
-					<TabsTrigger value="الادوات الدرسية">الادوات الدرسية</TabsTrigger>
+		<div className="flex md:items-center mb-5 md:justify-around flex-col md:flex-row ">
+			<div>
+				<form>
+					<Field orientation="horizontal">
+						<Input type="search" placeholder="بحث ......" name="search" />
+						<Button>بحث</Button>
+					</Field>
+				</form>
+			</div>
+			<Tabs defaultValue="overview" className="p-5">
+				<TabsList className="flex flex-wrap">
+					{categories.map((category) => (
+						<TabsTrigger
+							value={category.name}
+							key={category.id}
+							onClick={() => handleFilter(category.name)}
+						>
+							{category.name}
+						</TabsTrigger>
+					))}
+					<TabsTrigger
+						value="كل المنتجات"
+						onClick={() => handleFilter("كل المنتجات")}
+					>
+						كل المنتجات
+					</TabsTrigger>
 				</TabsList>
 			</Tabs>
-			<div>
-				<Field orientation="horizontal">
-					<Input type="search" placeholder="بحث ......" />
-					<Button>بحث</Button>
-				</Field>
-			</div>
 		</div>
 	);
 }

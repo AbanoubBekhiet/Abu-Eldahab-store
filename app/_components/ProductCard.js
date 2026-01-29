@@ -11,31 +11,45 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
-
-export default function ProductCard({ image }) {
+const IMAGE_PATH =
+	"https://vyojzehexdatndltudup.supabase.co/storage/v1/object/public/products_images";
+export default function ProductCard({ product }) {
 	return (
 		<Card className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden bg-[var(--color-four)] border border-[var(--color-one)]">
-			<div className="absolute inset-0 z-30 aspect-video" />
-			<Image
-				src={image ?? default_image}
-				alt="Event cover"
-				className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40 "
-			/>
+			<div className="relative w-full h-60 inset-0 z-30 aspect-video">
+				<Image
+					src={
+						product?.image_url
+							? `${IMAGE_PATH}/${product.image_url}`
+							: default_image
+					}
+					fill
+					alt={product?.name ?? "Product image"}
+					sizes="100vw"
+					className="z-20 aspect-video w-full object-cover brightness-80  "
+				/>
+			</div>
 			<CardHeader className="">
-				<CardAction>
-					<Badge variant="secondary">Featured</Badge>
-				</CardAction>
 				<CardTitle className="text-[var(--color-one)] ">
-					شكارة مسحوق فل 9 كيلو
+					{product.name}
 				</CardTitle>
 				<CardDescription className="text-[var(--color-one)]">
 					<div>
-						<span className="text-2xl font-extrabold">163 </span>
-						<span>ج.م / للوحدة</span>
+						<span className="text-2xl font-extrabold">
+							{product?.packet_price} ج.م
+						</span>
+						<span>
+							/
+							{!product?.number_of_pieces_in_packet ||
+							product?.number_of_pieces_in_packet === 0
+								? "1"
+								: product?.number_of_pieces_in_packet}{" "}
+							قطعة{" "}
+						</span>
 					</div>
 				</CardDescription>
 			</CardHeader>
-			<CardFooter>
+			<CardFooter className="">
 				<Button
 					variant="outline"
 					size="lg"

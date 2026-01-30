@@ -1,6 +1,8 @@
 import ProductCard from "./ProductCard";
+import { getUserData } from "../_libs/actions";
 
-function ProductsList({ products, params, categories }) {
+async function ProductsList({ products, params, categories }) {
+	const user = await getUserData();
 	const filter = params?.filter ?? "كل المنتجات";
 	const search = params?.search;
 	let displayedProducts = products;
@@ -12,7 +14,7 @@ function ProductsList({ products, params, categories }) {
 			);
 		}
 	}
-	if (params?.search&&params?.search!=="لا يوجد") {
+	if (params?.search && params?.search !== "لا يوجد") {
 		displayedProducts = products.filter((product) =>
 			product.name.includes(search),
 		);
@@ -21,7 +23,7 @@ function ProductsList({ products, params, categories }) {
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10">
 			{displayedProducts.map((product) => (
-				<ProductCard product={product} key={product.id} />
+				<ProductCard product={product} key={product.id} user={user} />
 			))}
 		</div>
 	);

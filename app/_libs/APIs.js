@@ -1,7 +1,4 @@
-import { createSupabaseServerClient } from "./server-client";
 import { supabase } from "./supabase";
-
-const supabaseServer = await createSupabaseServerClient();
 
 export async function getProducts() {
 	try {
@@ -22,11 +19,86 @@ export async function getCategories() {
 	}
 }
 
-export async function getUserData() {
-	const {
-		data: { user },
-	} = await supabaseServer.auth.getUser();
-	return user;
+export async function getCart(user_id) {
+	try {
+		const { data: cart, error } = await supabase
+			.from("cart")
+			.select(
+				`
+				user_id,
+				number_of_packets,
+				number_of_pieces,
+				price_of_packet,
+				price_of_piece,
+				product_id,
+				products (
+					name,
+					image_url,
+					number_of_pieces_in_packet
+				)
+			`,
+			)
+			.eq("user_id", user_id);
+
+		if (error) throw error;
+
+		return cart.map(({ products, ...item }) => ({
+			...item,
+			...products,
+		}));
+	} catch (error) {
+		throw new Error(error.message);
+	}
 }
 
+export async function insertCartProduct(user_id, product) {
+	const { data, error } = await supabase.from("cart").insert([
+		{
+			user_id: user_id,
+			product_id: product.id,
+			number_of_packets: 1,
+			number_of_pieces: 0,
+			price_of_packet: product.price_of_packet,
+			price_of_piece: product.price_of_piece,
+		},
+	]);
 
+	if (error) {
+		console.error("Insert cart error:", error);
+		throw error;
+	}
+	return data;
+}
+
+export async function updateCartProduct(
+	product_id,
+	user_id,
+	number_of_packets,
+	number_of_pieces,
+) {
+	try {
+		const { data, error } = await supabase
+			.from("cart")
+			.update({
+				number_of_packets: number_of_packets,
+				number_of_pieces: number_of_pieces,
+			})
+			.eq("product_id", product_id)
+			.eq("user_id", user_id);
+
+		return "product updated successfully in cart";
+	} catch (error) {
+		throw new Error(error);
+	}
+}
+
+export async function deleteCartProduct(product_id, user_id) {
+	const { error } = await supabase
+		.from("cart")
+		.delete()
+		.eq("product_id", product_id)
+		.eq("user_id", user_id);
+	if (error) {
+		throw new Error("problem in removing element from cart", error);
+	}
+}

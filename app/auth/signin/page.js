@@ -3,6 +3,7 @@ import { supabase } from "@/app/_libs/browser-client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 
 function Signin() {
 	const router = useRouter();
@@ -13,7 +14,6 @@ function Signin() {
 				redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
 			},
 		});
-		router.refresh();
 	};
 	return (
 		<div className="my-10 p-14 flex flex-col items-center border border-[var(--color-one)] rounded-2xl  bg-[var(--color-three)]">

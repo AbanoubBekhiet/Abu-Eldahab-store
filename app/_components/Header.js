@@ -9,14 +9,28 @@ import {
 	Menu,
 	ShoppingCart,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../_libs/browser-client";
 import { useRouter } from "next/navigation";
 import { useSupabaseUser } from "../hooks/useSupabaseUser";
+import { useDispatch } from "react-redux";
+import { getCart } from "../_libs/APIs";
+import { setCart } from "../store/cartSlice";
 
 function Header({ initialUser }) {
 	const [isOpen, setIsOpen] = useState(false);
+	const dispatch = useDispatch();
 	const user = useSupabaseUser(initialUser);
+	useEffect(() => {
+		async function fetchCart() {
+			if (user) {
+				const cartItems = await getCart(user.id);
+				dispatch(setCart(cartItems));
+			}
+		}
+		fetchCart();
+	}, [dispatch, user?.id, user]);
+
 	const router = useRouter();
 	async function signOut() {
 		let { error } = await supabase.auth.signOut();
@@ -58,17 +72,17 @@ function Header({ initialUser }) {
 				</li>
 			</ul>
 			<div className="flex gap-4 ">
-				<Link href="profile" title="الملف الشخصي">
+				<Link href="/profile" title="الملف الشخصي">
 					<CircleUserRound className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
 				</Link>
-				<Link href="cart" title="سلة المشتريات">
+				<Link href="/cart" title="سلة المشتريات">
 					<ShoppingCart className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
 				</Link>
 				{user ? (
 					<button
 						onClick={signOut}
 						type="submit"
-						className="cursur-pointer text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out"
+						className="cursur-pointer text-red-400 hover:text-red-600 transition duration-700 ease-in-out"
 						title="تسجيل خروج"
 					>
 						<LogOut />

@@ -16,6 +16,7 @@ import { useSupabaseUser } from "../hooks/useSupabaseUser";
 import { useDispatch } from "react-redux";
 import { getCart } from "../_libs/APIs";
 import { setCart } from "../store/cartSlice";
+import { logout } from "../store/authSlice";
 
 function Header({ initialUser }) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +35,7 @@ function Header({ initialUser }) {
 	const router = useRouter();
 	async function signOut() {
 		let { error } = await supabase.auth.signOut();
+		dispatch(logout());
 		router.push("/products");
 	}
 
@@ -72,7 +74,7 @@ function Header({ initialUser }) {
 				</li>
 			</ul>
 			<div className="flex gap-4 ">
-				<Link href="/profile" title="الملف الشخصي">
+				<Link href="/profile/info" title="الملف الشخصي">
 					<CircleUserRound className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
 				</Link>
 				<Link href="/cart" title="سلة المشتريات">

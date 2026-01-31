@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-
+import { supabase as clientBrowser } from "./browser-client";
 export async function getProducts() {
 	try {
 		let { data: products, error } = await supabase.from("products").select("*");
@@ -102,3 +102,51 @@ export async function deleteCartProduct(product_id, user_id) {
 		throw new Error("problem in removing element from cart", error);
 	}
 }
+
+export async function getProfileData() {
+	const {
+		data: { user },
+		error: userError,
+	} = await clientBrowser.auth.getUser();
+	if (userError || !user) throw new Error("Not authenticated");
+
+	const { data: profile, error } = await clientBrowser
+		.from("profiles")
+		.select("*")
+		.eq("id", user.id)
+		.maybeSingle();
+
+	if (error) throw new Error(error.message);
+	return profile;
+}
+
+export async function updateProfileData(user_data) {
+	const {
+		data: { user },
+		error: userError,
+	} = await clientBrowser.auth.getUser();
+	if (userError || !user) throw new Error("Not authenticated");
+
+	const { data, error } = await clientBrowser
+		.from("profiles")
+		.update({
+			full_name: user_data.full_name,
+			address: user_data.address,
+			phone: user_data.phone,
+			shop_name: user_data.shop_name,
+			notes: user_data.notes ?? "",
+		})
+		.eq("id", user.id)
+		.select("id, full_name, address, phone, shop_name, notes")
+		.maybeSingle();
+
+	if (error) {
+		console.error("Supabase update error:", error);
+		throw error;
+	}
+
+	return data;
+}
+
+
+

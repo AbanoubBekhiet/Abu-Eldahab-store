@@ -4,6 +4,7 @@ import Footer from "./_components/Footer";
 import Providers from "./providers";
 import { getUserData } from "./_libs/actions";
 import { ToastContainer } from "react-toastify";
+import AuthLoader from "./_libs/AuthLoader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,6 +15,7 @@ export default async function RootLayout({ children }) {
 		<html lang="en">
 			<body className="flex flex-col min-h-screen">
 				<Providers>
+					<AuthLoader />
 					<Header initialUser={user} />
 					<main className="p-4 flex justify-center flex-1">{children}</main>
 					<Footer />

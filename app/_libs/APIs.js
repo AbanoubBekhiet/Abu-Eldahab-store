@@ -1,5 +1,16 @@
 import { supabase } from "./supabase";
 import { supabase as clientBrowser } from "./browser-client";
+
+async function getAuthUserId() {
+	const {
+		data: { user },
+		error: userError,
+	} = await clientBrowser.auth.getUser();
+
+	if (userError) throw new Error(userError.message);
+	return user.id;
+}
+
 export async function getProducts() {
 	try {
 		let { data: products, error } = await supabase.from("products").select("*");
@@ -120,7 +131,7 @@ export async function getProfileData() {
 	return profile;
 }
 
-export async function updateProfileData(user_data) {
+export async function updateProfileData() {
 	const {
 		data: { user },
 		error: userError,
@@ -148,5 +159,63 @@ export async function updateProfileData(user_data) {
 	return data;
 }
 
+// export async function getOrders() {
+// 	const {
+// 		data: { user },
+// 		error: userError,
+// 	} = await clientBrowser.auth.getUser();
+// 	if (userError || !user) throw new Error("Not authenticated");
 
+// 	let { data: orders, error } = await supabase.from("orders").select(`
+//     id as order_id,
+// 	status,
+// 	total_price,
+//     customer_product (
+//       order_id
+//     )
+//   `);
+// }
 
+//making order process
+
+export async function makeOrder(total_price, cartItems) {
+	const user_id = await getAuthUserId();
+
+	const { data: orderData, error: orderError } = await clientBrowser
+		.from("orders")
+		.insert([{ customer_id: user_id, total_price: total_price }])
+		.select()
+		.single();
+	if (orderError) {
+		throw new Error(orderError.message);
+	}
+
+	const rowsToInsert = cartItems.map((item) => ({
+		order_id: orderData.id,
+		customer_id: user_id,
+		product_id: item.product_id,
+		packet_price: item.price_of_packet,
+		piece_price: item.price_of_piece,
+		number_of_packets: item.number_of_packets,
+		number_of_pieces: item.number_of_pieces,
+	}));
+
+	const { data, error } = await clientBrowser
+		.from("customer_product")
+		.insert(rowsToInsert)
+		.select();
+
+	if (error) {
+		throw new Error(error.message);
+	}
+	return data;
+}
+
+export async function deleteCartItems() {
+	const user_id = await getAuthUserId();
+	const { error } = await clientBrowser
+		.from("cart")
+		.delete()
+		.eq("user_id", user_id);
+	if (error) throw new Error(error.message);
+}

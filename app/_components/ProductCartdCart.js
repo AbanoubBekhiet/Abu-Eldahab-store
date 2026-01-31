@@ -13,6 +13,7 @@ function ProductCartCard({ product }) {
 	function onRemove() {
 		dispatch(removeFromCart(product.product_id));
 		deleteCartProduct(product.product_id, product.user_id);
+		toast.success("تم إزالة المنتج من السلة");
 	}
 	function onDecreasePackets() {
 		if (product.number_of_packets === 0) {

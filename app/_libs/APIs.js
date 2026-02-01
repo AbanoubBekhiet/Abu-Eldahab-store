@@ -6,7 +6,6 @@ async function getAuthUserId() {
 		data: { user },
 		error: userError,
 	} = await clientBrowser.auth.getUser();
-
 	if (userError) throw new Error(userError.message);
 	return user.id;
 }
@@ -159,23 +158,6 @@ export async function updateProfileData() {
 	return data;
 }
 
-// export async function getOrders() {
-// 	const {
-// 		data: { user },
-// 		error: userError,
-// 	} = await clientBrowser.auth.getUser();
-// 	if (userError || !user) throw new Error("Not authenticated");
-
-// 	let { data: orders, error } = await supabase.from("orders").select(`
-//     id as order_id,
-// 	status,
-// 	total_price,
-//     customer_product (
-//       order_id
-//     )
-//   `);
-// }
-
 //making order process
 
 export async function makeOrder(total_price, cartItems) {
@@ -219,3 +201,5 @@ export async function deleteCartItems() {
 		.eq("user_id", user_id);
 	if (error) throw new Error(error.message);
 }
+
+

@@ -1,7 +1,10 @@
 import OrderDetails from "@/app/_components/OrderDetails";
 import { OrderItems } from "@/app/_components/OrderItems";
 import { getOrders } from "@/app/_libs/actions";
-
+export const metadata = {
+	title: "طلباتك",
+	description: "معلومات  طلباتك السابقة",
+};
 async function page({ searchParams }) {
 	const orders = await getOrders();
 	const params = await searchParams;

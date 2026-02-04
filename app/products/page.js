@@ -5,6 +5,12 @@ import { getCategories, getProductsWithPagintion } from "../_libs/APIs";
 import Spinner from "../_components/Spinner";
 import ProductsPagination from "../_components/ProductsPagination";
 
+export const metadata = {
+	title: "المنتجات",
+	description:
+		"هتلاقي عند ابو الدهب كل اللي بتدور عليه من منتجات بجودة عالية واسعار منافسة من خردوات و منظفات و ورقيات و ادوات مكتبية",
+};
+
 async function page({ searchParams }) {
 	const params = await searchParams;
 	const [products, categories] = await Promise.all([

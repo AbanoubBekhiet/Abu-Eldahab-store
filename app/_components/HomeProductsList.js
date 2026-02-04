@@ -93,14 +93,14 @@ function HomeProductsList({ category, user }) {
 			<div className="relative group w-full">
 				<button
 					className="absolute -right-2 top-1/2 -translate-y-1/2 z-50 bg-[var(--color-one)] rounded-full p-2 shadow-xl hover:scale-110 transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-white"
-					onClick={() => handleScrollNavigation("left")}
+					onClick={() => handleScrollNavigation("right")}
 				>
 					<ChevronRight className="text-white" size={20} />
 				</button>
 
 				<button
 					className="absolute -left-2 top-1/2 -translate-y-1/2 z-50 bg-[var(--color-one)] rounded-full p-2 shadow-xl hover:scale-110 transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center border border-white"
-					onClick={() => handleScrollNavigation("right")}
+					onClick={() => handleScrollNavigation("left")}
 				>
 					<ChevronLeft className="text-white" size={20} />
 				</button>

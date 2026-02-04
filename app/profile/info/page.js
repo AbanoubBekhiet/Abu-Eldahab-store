@@ -31,6 +31,8 @@ import { updateProfileData } from "@/app/_libs/APIs";
 import { toast } from "react-toastify";
 import { setUser } from "@/app/store/authSlice";
 
+
+
 /* ---------------- Schema ---------------- */
 const formSchema = z.object({
 	full_name: z

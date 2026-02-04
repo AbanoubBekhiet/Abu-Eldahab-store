@@ -2,7 +2,6 @@
 import { supabase } from "@/app/_libs/browser-client";
 import { Button } from "@/components/ui/button";
 import { FaGoogle } from "react-icons/fa";
-
 function Signin() {
 	const signIn = async () => {
 		await supabase.auth.signInWithOAuth({

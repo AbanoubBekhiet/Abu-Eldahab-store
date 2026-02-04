@@ -5,6 +5,12 @@ import Providers from "./providers";
 import { getUserData } from "./_libs/actions";
 import { ToastContainer } from "react-toastify";
 import AuthLoader from "./_libs/AuthLoader";
+export const metadata = {
+	title: {
+		template: "%s | متجر ابو الدهب",
+		default: "متجر ابو الدهب",
+	},
+};
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

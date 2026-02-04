@@ -10,6 +10,8 @@ import { clearCart } from "@/app/store/cartSlice";
 import { redirect } from "next/navigation";
 import EmptyCart from "../_components/EmptyCart";
 
+
+
 function Cart() {
 	const items = useSelector((state) => state.cart.items);
 	const user_data = useSelector((state) => state.auth);

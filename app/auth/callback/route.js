@@ -7,7 +7,7 @@ export async function GET(request) {
 	if (!code) {
 		return NextResponse.redirect(`${origin}/login`);
 	}
-	const response = NextResponse.redirect(`${origin}/products`);
+	const response = NextResponse.redirect(`${origin}`);
 
 	const supabaseServer = createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,

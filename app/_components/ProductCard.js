@@ -11,8 +11,9 @@ const IMAGE_PATH =
 	"https://vyojzehexdatndltudup.supabase.co/storage/v1/object/public/products_images";
 
 export default function ProductCard({ product, user }) {
+	
 	return (
-		<Card className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden bg-[var(--color-four)] border border-[var(--color-one)] flex flex-col">
+		<Card className="relative  w-full max-w-sm pt-0 overflow-hidden bg-[var(--color-four)] border border-[var(--color-one)] flex flex-col ">
 			<div className="relative w-full h-60 inset-0 z-30 aspect-video">
 				<Image
 					src={
@@ -22,13 +23,12 @@ export default function ProductCard({ product, user }) {
 					}
 					fill
 					alt={product?.name ?? "Product image"}
-					sizes="100vw"
 					className="z-20 aspect-video w-full object-cover brightness-80  "
 				/>
 			</div>
 			<CardHeader className="flex-1">
 				<CardTitle className="text-[var(--color-one)] ">
-					{product.name}
+					{product?.name}
 				</CardTitle>
 				<CardDescription className="text-[var(--color-one)]">
 					<div>

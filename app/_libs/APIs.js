@@ -11,22 +11,33 @@ async function getAuthUserId() {
 }
 
 export async function getProducts() {
-	try {
-		let { data: products, error } = await supabase.from("products").select("*");
-
-		return products;
-	} catch (error) {
-		throw new Error();
-	}
+	let { data: products, error } = await supabase.from("products").select("*");
+	if (error) throw new Error(error.message);
+	return products;
 }
 
+export async function getProductsForSpecificCategory(
+	category_id,
+	lastIncreId = 0,
+	limit = 15,
+) {
+	const { data: products, error } = await supabase
+		.from("products")
+		.select("*")
+		.eq("category_id", category_id)
+		.gt("incre_id", lastIncreId)
+		.order("incre_id", { ascending: true })
+		.limit(limit);
+
+	if (error) throw new Error(error.message);
+	return products;
+}
 export async function getCategories() {
-	try {
-		let { data: categories } = await supabase.from("categories").select("*");
-		return categories;
-	} catch (error) {
-		throw new Error("there is a problem in fetching categories");
-	}
+	let { data: categories, error } = await supabase
+		.from("categories")
+		.select("id,name");
+	if (error) throw new Error(error.message);
+	return categories;
 }
 
 export async function getCart(user_id) {
@@ -130,7 +141,7 @@ export async function getProfileData() {
 	return profile;
 }
 
-export async function updateProfileData() {
+export async function updateProfileData(user_data) {
 	const {
 		data: { user },
 		error: userError,
@@ -201,5 +212,3 @@ export async function deleteCartItems() {
 		.eq("user_id", user_id);
 	if (error) throw new Error(error.message);
 }
-
-

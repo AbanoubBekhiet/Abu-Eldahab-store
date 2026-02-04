@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { insertCartProduct } from "../_libs/APIs";
 import { addToCart } from "../store/cartSlice";
 import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
 function ProductCardFooter({ product, user }) {
 	const dispatch = useDispatch();
@@ -18,9 +19,16 @@ function ProductCardFooter({ product, user }) {
 		try {
 			const existed = isItemExisted();
 			if (existed === false) {
-				await insertCartProduct(user.id, product);
-				dispatch(addToCart(product));
-				toast.success("تم إضافة المنتج للسلة بنجاح");
+				if (!user) {
+					toast.info("يجب تسجيل الدخول لإضافة منتجات إلي السلة");
+					setTimeout(() => {
+						redirect("/auth/signin");
+					}, 300);
+				} else {
+					await insertCartProduct(user.id, product);
+					dispatch(addToCart(product));
+					toast.success("تم إضافة المنتج للسلة بنجاح");
+				}
 			} else {
 				toast.info("تم إضافة المنتج للسلة بالفعل لتعديل الكمية إذهب للسلة");
 			}

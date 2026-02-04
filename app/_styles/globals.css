@@ -121,3 +121,10 @@ body {
 	direction: rtl;
 	background-color: var(--color-four);
 }
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+.no-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}

@@ -11,7 +11,6 @@ function Signin() {
 				redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
 			},
 		});
-
 	};
 	return (
 		<div className="my-10 p-14 flex flex-col items-center border border-[var(--color-one)] rounded-2xl  bg-[var(--color-three)]">

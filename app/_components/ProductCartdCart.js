@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { deleteCartProduct, updateCartProduct } from "../_libs/APIs";
 import { removeFromCart, updateItem } from "../store/cartSlice";
 import { toast } from "react-toastify";
+import default_image from "@/public/default_image.webp";
+
 const IMAGE_PATH =
 	"https://vyojzehexdatndltudup.supabase.co/storage/v1/object/public/products_images";
 

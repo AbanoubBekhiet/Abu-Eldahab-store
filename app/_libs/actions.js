@@ -51,3 +51,4 @@ export async function getOrders() {
 	if (error) throw new Error(error.message);
 	return orders;
 }
+

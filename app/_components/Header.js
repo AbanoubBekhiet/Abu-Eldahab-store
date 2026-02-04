@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { getCart } from "../_libs/APIs";
 import { setCart } from "../store/cartSlice";
 import { logout } from "../store/authSlice";
+import { toast } from "react-toastify";
 
 function Header({ initialUser }) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -36,9 +37,9 @@ function Header({ initialUser }) {
 	async function signOut() {
 		let { error } = await supabase.auth.signOut();
 		dispatch(logout());
+		toast.success("تم تسجيل الخروج بنجاح");
 		router.push("/products");
 	}
-
 	return (
 		<header className="bg-[var(--color-two)] p-8  flex items-center justify-between ">
 			<div className="flex items-center  gap-3">
@@ -69,9 +70,9 @@ function Header({ initialUser }) {
 				<li>
 					<Link href="/">الصفحة الرئيسية</Link>
 				</li>
-				<li>
+				{/* <li>
 					<Link href="/offers">العروض</Link>
-				</li>
+				</li> */}
 			</ul>
 			<div className="flex gap-4 ">
 				<Link href="/profile/info" title="الملف الشخصي">

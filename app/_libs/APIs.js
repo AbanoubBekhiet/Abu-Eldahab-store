@@ -10,12 +10,30 @@ async function getAuthUserId() {
 	return user.id;
 }
 
-export async function getProducts() {
-	let { data: products, error } = await supabase.from("products").select("*");
+export async function getProductsWithPagintion(params) {
+	const limit = 15;
+	const page = parseInt(params.page) || 1;
+	const from = (page - 1) * limit;
+	const to = from + limit - 1;
+
+	const categoryName = params.filter;
+	const searchQuery = params.search;
+	let query = supabase.from("products").select("*,categories!inner(name)");
+
+	if (categoryName && categoryName !== "كل المنتجات") {
+		query = query.eq("categories.name", categoryName);
+	}
+
+	if (searchQuery && searchQuery !== "لا يوجد") {
+		query = query.ilike("name", `%${searchQuery}%`);
+	}
+	const { data: products, error } = await query
+		.order("incre_id", { ascending: true })
+		.range(from, to);
+
 	if (error) throw new Error(error.message);
 	return products;
 }
-
 export async function getProductsForSpecificCategory(
 	category_id,
 	lastIncreId = 0,

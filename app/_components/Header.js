@@ -4,9 +4,11 @@ import logo from "@/public/logo.jpeg";
 import Link from "next/link";
 import {
 	CircleUserRound,
+	House,
 	LogIn,
 	LogOut,
 	Menu,
+	PackageSearch,
 	ShoppingCart,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -20,7 +22,6 @@ import { logout } from "../store/authSlice";
 import { toast } from "react-toastify";
 
 function Header({ initialUser }) {
-	const [isOpen, setIsOpen] = useState(false);
 	const dispatch = useDispatch();
 	const user = useSupabaseUser(initialUser);
 	useEffect(() => {
@@ -52,23 +53,17 @@ function Header({ initialUser }) {
 						className="rounded-full"
 					/>
 				</Link>
-				<Menu
-					className="sm:hidden cursor-pointer"
-					onClick={() => setIsOpen(!isOpen)}
-				/>
 			</div>
-			<ul
-				className={`flex gap-4 font-bold text-xl transition-all duration-150 overflow-hidden
-    flex-col sm:flex-row
-    ${isOpen ? "max-h-96 fixed sm:static  top-24 z-30 bg-[var(--color-two)] w-full left-0 px-6 py-3" : "max-h-0 sm:max-h-full"}
-    [&>li>a]:text-[var(--color-one)] [&>li>a]:transition-all [&>li>a]:duration-300 [&>li>a:hover]:text-[var(--color-three)] [&>li>a:hover]:translate-y-1 [&>li>a]:transform
-  `}
-			>
+			<ul className="flex gap-4  ">
 				<li>
-					<Link href="/products">المنتجات</Link>
+					<Link href="/products?page=1" title="جميع المنتجات">
+						<PackageSearch className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
+					</Link>
 				</li>
 				<li>
-					<Link href="/">الصفحة الرئيسية</Link>
+					<Link href="/" title="الصفحة الرئيسية">
+						<House className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
+					</Link>
 				</li>
 				{/* <li>
 					<Link href="/offers">العروض</Link>

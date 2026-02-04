@@ -14,6 +14,7 @@ export function ProductsFilter({ categories }) {
 		const params = new URLSearchParams(searchParams.toString());
 		params.set("filter", filter);
 		params.set("search", "لا يوجد");
+		params.set("page", "1");
 		router.replace(`${pathName}?${params.toString()}`, { scroll: false });
 	}
 

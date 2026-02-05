@@ -7,7 +7,7 @@ import { removeFromCart, updateItem } from "../store/cartSlice";
 import { toast } from "react-toastify";
 import default_image from "@/public/default_image.webp";
 
-const IMAGE_PATH =
+const image_path =
 	"https://vyojzehexdatndltudup.supabase.co/storage/v1/object/public/products_images";
 
 function ProductCartCard({ product }) {
@@ -113,7 +113,7 @@ function ProductCartCard({ product }) {
 						<Image
 							src={
 								product?.image_url
-									? `${IMAGE_PATH}/${product.image_url}`
+									? `${image_path}/${product.image_url}`
 									: default_image
 							}
 							fill

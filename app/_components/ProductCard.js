@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import ProductCardFooter from "./ProductCardFooter";
-const IMAGE_PATH =
+const image_path =
 	"https://vyojzehexdatndltudup.supabase.co/storage/v1/object/public/products_images";
 
 export default function ProductCard({ product, user }) {
@@ -18,7 +18,7 @@ export default function ProductCard({ product, user }) {
 				<Image
 					src={
 						product?.image_url
-							? `${IMAGE_PATH}/${product.image_url}`
+							? `${image_path}/${product.image_url}`
 							: default_image
 					}
 					fill

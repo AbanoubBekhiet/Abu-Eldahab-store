@@ -113,7 +113,7 @@ function ProductCartCard({ product }) {
 						<Image
 							src={
 								product?.image_url
-									? `${image_path}/${product.image_url}`
+									? `${image_path}/${product.image_url.trim()}` 
 									: default_image
 							}
 							fill

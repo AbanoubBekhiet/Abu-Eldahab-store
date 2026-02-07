@@ -26,10 +26,10 @@ export default function ProductCard({ product, user }) {
 				/>
 			</div>
 			<CardHeader className="flex-1">
-				<CardTitle className="text-[var(--color-one)] ">
+				<CardTitle className="text-[var(--color-one)] text-xl  min-h-16 sm:text-2xl">
 					{product?.name}
 				</CardTitle>
-				<CardDescription className="text-[var(--color-one)]">
+				<CardDescription className="text-[var(--color-one)] min-h-14">
 					<div>
 						<span className="text-2xl font-extrabold">
 							{product?.price_of_packet} ج.م

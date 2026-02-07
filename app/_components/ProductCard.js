@@ -13,7 +13,7 @@ const image_path =
 export default function ProductCard({ product, user }) {
 	return (
 		<Card className="relative  w-full max-w-sm pt-0 overflow-hidden bg-[var(--color-four)] border border-[var(--color-one)] flex flex-col ">
-			<div className="relative w-full h-60 inset-0 z-30 aspect-video">
+			<div className="relative w-full m-h-60 inset-0 z-30 aspect-video">
 				<Image
 					src={
 						product?.image_url

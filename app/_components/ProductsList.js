@@ -4,22 +4,6 @@ import EmptyProducts from "./EmptyProducts";
 
 async function ProductsList({ products }) {
 	const user = await getUserData();
-	// const filter = params?.filter ?? "كل المنتجات";
-	// const search = params?.search;
-	// let displayedProducts = products;
-	// if (filter !== "كل المنتجات") {
-	// 	const category = categories.find((category) => category.name === filter);
-	// 	if (category) {
-	// 		displayedProducts = products.filter(
-	// 			(product) => product.category_id === category.id,
-	// 		);
-	// 	}
-	// }
-	// if (params?.search && params?.search !== "لا يوجد") {
-	// 	displayedProducts = products.filter((product) =>
-	// 		product.name.includes(search),
-	// 	);
-	// }
 	if (products.length == 0) {
 		return (
 			<div className="flex items-center justify-center ">
@@ -28,7 +12,7 @@ async function ProductsList({ products }) {
 		);
 	}
 	return (
-		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+		<div className="grid grid-cols-2 sm:grid-cols-3  lg:grid-cols-5 gap-4">
 			{products.map((product) => (
 				<ProductCard product={product} key={product.id} user={user} />
 			))}

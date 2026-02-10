@@ -15,7 +15,6 @@ import EmptyCart from "../_components/EmptyCart";
 function Cart() {
 	const items = useSelector((state) => state.cart.items);
 	const user_data = useSelector((state) => state.auth);
-	console.log(user_data);
 	const dispatch = useDispatch();
 	function calculateTotalPriceOfOrder() {
 		return items.reduce((sum, item) => {

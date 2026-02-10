@@ -113,7 +113,7 @@ function ProductCartCard({ product }) {
 						<Image
 							src={
 								product?.image_url
-									? `${image_path}/${product.image_url.trim()}` 
+									? `${image_path}/${product.image_url.trim()}`
 									: default_image
 							}
 							fill
@@ -150,27 +150,29 @@ function ProductCartCard({ product }) {
 							<Plus size={16} />
 						</button>
 					</div>
-					<div>
-						<div className="flex items-center justify-around  gap-2 rounded-lg border border-[var(--color-one)] text-[var(--color-one)] px-9 py-2 mb-4">
-							<button
-								onClick={onDecreasePieces}
-								className="rounded-md bg-gray-100 p-1 hover:bg-gray-200"
-							>
-								<Minus size={16} />
-							</button>
+					{product?.accepts_pieces && (
+						<div>
+							<div className="flex items-center justify-around  gap-2 rounded-lg border border-[var(--color-one)] text-[var(--color-one)] px-9 py-2 mb-4">
+								<button
+									onClick={onDecreasePieces}
+									className="rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+								>
+									<Minus size={16} />
+								</button>
 
-							<span className="min-w-[24px] text-center text-lg font-bold">
-								{product.number_of_pieces} قطعة
-							</span>
+								<span className="min-w-[24px] text-center text-lg font-bold">
+									{product.number_of_pieces} قطعة
+								</span>
 
-							<button
-								onClick={onIncreasePieces}
-								className="rounded-md bg-gray-100 p-1 hover:bg-gray-200"
-							>
-								<Plus size={16} />
-							</button>
+								<button
+									onClick={onIncreasePieces}
+									className="rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+								>
+									<Plus size={16} />
+								</button>
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 			<div className="flex flex-col ">

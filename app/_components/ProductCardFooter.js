@@ -39,15 +39,26 @@ function ProductCardFooter({ product, user }) {
 
 	return (
 		<CardFooter>
-			<Button
-				onClick={handleAddToCart}
-				variant="outline"
-				size="lg"
-				className="bg-[var(--color-one)] text-[var(--color-four)] text-1.5xl font-bold"
-			>
-				<ShoppingCart />
-				اضف للسلة
-			</Button>
+			{product?.available ? (
+				<Button
+					onClick={handleAddToCart}
+					variant="outline"
+					size="lg"
+					className="bg-[var(--color-one)] text-[var(--color-four)] text-1.5xl font-bold"
+				>
+					<ShoppingCart />
+					اضف للسلة
+				</Button>
+			) : (
+				<Button
+					variant="outline"
+					size="lg"
+					className=" cursor-not-allowed bg-[var(--color-one)] text-[var(--color-four)] text-1.5xl font-bold"
+				>
+					<ShoppingCart />
+					نفذت الكمية
+				</Button>
+			)}
 		</CardFooter>
 	);
 }

@@ -22,14 +22,14 @@ export default function ProductCard({ product, user }) {
 					}
 					fill
 					alt={product?.name ?? "Product image"}
-					className="z-20 aspect-video w-full object-cover brightness-80  "
+					className="z-20 aspect-video w-full object-contain brightness-80  "
 				/>
 			</div>
 			<CardHeader className="flex-1">
-				<CardTitle className="text-[var(--color-one)] text-xl  min-h-16 sm:text-2xl">
+				<CardTitle className="text-[var(--color-one)] text-xl  min-h-24 sm:text-2xl">
 					{product?.name}
 				</CardTitle>
-				<CardDescription className="text-[var(--color-one)] min-h-14">
+				<CardDescription className="text-[var(--color-one)] min-h-16">
 					<div>
 						<span className="text-2xl font-extrabold">
 							{product?.price_of_packet} ج.م

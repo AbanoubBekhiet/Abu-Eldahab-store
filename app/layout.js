@@ -11,8 +11,10 @@ export const metadata = {
 		template: "%s | متجر ابو الدهب",
 		default: "متجر ابو الدهب",
 	},
+	verification: {
+		google: "tQMqyEQB3Q73XwZHx9spm4bfQiUcioaOaNnsJiuzKHA",
+	},
 };
-
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 

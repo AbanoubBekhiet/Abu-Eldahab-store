@@ -24,6 +24,7 @@ const cartSlice = createSlice({
 					product_id: action.payload.id,
 					name: action.payload.name,
 					image_url: action.payload.image_url,
+					accepts_pieces: action.payload.accepts_pieces,
 					number_of_pieces_in_packet: action.payload.number_of_pieces_in_packet,
 				});
 		},

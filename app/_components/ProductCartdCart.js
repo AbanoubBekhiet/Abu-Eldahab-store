@@ -94,7 +94,7 @@ function ProductCartCard({ product }) {
 			product?.number_of_packets * product?.price_of_packet
 		);
 	}
-
+	console.log(product)
 	return (
 		<div className="w-rounded-xl border border-gray-200 bg-white p-5 shadow-xl rounded-2xl h-96">
 			<div className="flex items-start justify-between gap-3">
@@ -150,6 +150,7 @@ function ProductCartCard({ product }) {
 							<Plus size={16} />
 						</button>
 					</div>
+					
 					{product?.accepts_pieces && (
 						<div>
 							<div className="flex items-center justify-around  gap-2 rounded-lg border border-[var(--color-one)] text-[var(--color-one)] px-9 py-2 mb-4">

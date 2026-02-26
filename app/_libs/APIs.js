@@ -73,7 +73,8 @@ export async function getCart(user_id) {
 				products (
 					name,
 					image_url,
-					number_of_pieces_in_packet
+					number_of_pieces_in_packet,
+					accepts_pieces
 				)
 			`,
 			)

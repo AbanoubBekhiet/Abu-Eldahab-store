@@ -5,7 +5,7 @@ function WhatsUpContact() {
 	return (
 		<section
 			title="تواصل معنا"
-			className="fixed bottom-10 right-10 text-[var(--color-one)] text-3xl bg-white p-4 rounded-full z-50"
+			className="fixed bottom-10 right-10 text-[var(--color-one)] text-3xl bg-[var(--color-three)] p-4 rounded-full z-50"
 		>
 			<Link href="https://wa.me/qr/7FMMVZRLGVMXN1">
 				<BsWhatsapp />

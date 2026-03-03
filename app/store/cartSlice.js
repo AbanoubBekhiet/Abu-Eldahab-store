@@ -19,7 +19,7 @@ const cartSlice = createSlice({
 					user_id: action.payload.id,
 					number_of_packets: 1,
 					number_of_pieces: 0,
-					price_of_piece: 0,
+					price_of_piece: action.payload.price_of_piece,
 					price_of_packet: action.payload.price_of_packet,
 					product_id: action.payload.id,
 					name: action.payload.name,

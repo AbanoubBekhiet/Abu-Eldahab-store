@@ -13,7 +13,6 @@ const image_path =
 
 export default function ProductCard({ product, user }) {
     const isAvailable = product?.available;
-
     return (
         <Card 
             className={`relative w-full max-w-sm pt-0 overflow-hidden bg-[var(--color-four)] border border-[var(--color-one)] flex flex-col transition-all duration-300 ${

@@ -2,7 +2,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const PAGE_LIMIT = 15;
+const PAGE_LIMIT = 30;
 
 function ProductsPagination({ productsLength }) {
     const router = useRouter();

@@ -6,6 +6,7 @@ import { deleteCartProduct, updateCartProduct } from "../_libs/APIs";
 import { removeFromCart, updateItem } from "../store/cartSlice";
 import { toast } from "react-toastify";
 import default_image from "@/public/default_image.webp";
+import { useMemo } from "react";
 
 const image_path =
 	"https://vyojzehexdatndltudup.supabase.co/storage/v1/object/public/products_images";
@@ -18,82 +19,97 @@ function ProductCartCard({ product }) {
 		toast.success("تم إزالة المنتج من السلة");
 	}
 	function onDecreasePackets() {
-		if (product.number_of_packets === 0) {
+		if (product.number_of_packets <= 0) {
 			toast.warn("عدد العبوات صفر بالفعل");
-		} else {
-			dispatch(
-				updateItem({
-					product_id: product.product_id,
-					number_of_packets: product.number_of_packets - 1,
-					number_of_pieces: product.number_of_pieces,
-				}),
-			);
-			updateCartProduct(
-				product.product_id,
-				product.user_id,
-				product.number_of_packets - 1,
-				product.number_of_pieces,
-			);
+			return;
 		}
-	}
-	function onIncreasePackets() {
+
+		const nextValue = product.number_of_packets - 1;
+
 		dispatch(
 			updateItem({
-				product_id: product.product_id,
-				number_of_packets: product.number_of_packets + 1,
+				product_id: product.product_id || product.id,
+				number_of_packets: nextValue,
 				number_of_pieces: product.number_of_pieces,
 			}),
 		);
 
 		updateCartProduct(
-			product.product_id,
+			product.product_id || product.id,
 			product.user_id,
-			product.number_of_packets + 1,
+			nextValue,
 			product.number_of_pieces,
 		);
 	}
-	function onDecreasePieces() {
-		if (product.number_of_pieces === 0) {
-			toast.warn("عدد القطع صفر بالفعل");
-		} else {
-			dispatch(
-				updateItem({
-					product_id: product.product_id,
-					number_of_packets: product.number_of_packets,
-					number_of_pieces: product.number_of_pieces - 1,
-				}),
-			);
-			updateCartProduct(
-				product.product_id,
-				product.user_id,
-				product.number_of_packets,
-				product.number_of_pieces - 1,
-			);
-		}
-	}
-	function onIncreasePieces() {
+	function onIncreasePackets() {
+		const nextValue = (product.number_of_packets || 0) + 1;
+
 		dispatch(
 			updateItem({
-				product_id: product.product_id,
-				number_of_packets: product.number_of_packets,
-				number_of_pieces: product.number_of_pieces + 1,
+				product_id: product.product_id || product.id,
+				number_of_packets: nextValue,
+				number_of_pieces: product.number_of_pieces,
 			}),
 		);
 
 		updateCartProduct(
-			product.product_id,
+			product.product_id || product.id,
 			product.user_id,
-			product.number_of_packets,
-			product.number_of_pieces + 1,
+			nextValue,
+			product.number_of_pieces,
 		);
 	}
 
-	function totalPriceOfProduct() {
-		return (
-			product?.number_of_pieces * product?.price_of_piece +
-			product?.number_of_packets * product?.price_of_packet
+	function onDecreasePieces() {
+		if (product.number_of_pieces <= 0) {
+			toast.warn("عدد القطع صفر بالفعل");
+			return;
+		}
+
+		const nextValue = product.number_of_pieces - 1;
+
+		dispatch(
+			updateItem({
+				product_id: product.product_id || product.id,
+				number_of_packets: product.number_of_packets,
+				number_of_pieces: nextValue,
+			}),
+		);
+
+		updateCartProduct(
+			product.product_id || product.id,
+			product.user_id,
+			product.number_of_packets,
+			nextValue,
 		);
 	}
+
+	function onIncreasePieces() {
+		const nextValue = (product.number_of_pieces || 0) + 1;
+
+		dispatch(
+			updateItem({
+				product_id: product.product_id || product.id,
+				number_of_packets: product.number_of_packets,
+				number_of_pieces: nextValue,
+			}),
+		);
+
+		updateCartProduct(
+			product.product_id || product.id,
+			product.user_id,
+			product.number_of_packets,
+			nextValue,
+		);
+	}
+
+	const totalPriceOfProduct = useMemo(() => {
+		const total =
+			(product?.number_of_pieces || 0) * (product?.price_of_piece || 0) +
+			(product?.number_of_packets || 0) * (product?.price_of_packet || 0);
+
+		return Number(total.toFixed(2));
+	}, [product]);
 	return (
 		<div className="w-rounded-xl border border-gray-200 bg-white p-5 shadow-xl rounded-2xl h-96">
 			<div className="flex items-start justify-between gap-3">
@@ -149,7 +165,7 @@ function ProductCartCard({ product }) {
 							<Plus size={16} />
 						</button>
 					</div>
-					
+
 					{product?.accepts_pieces && (
 						<div>
 							<div className="flex items-center justify-around  gap-2 rounded-lg border border-[var(--color-one)] text-[var(--color-one)] px-9 py-2 mb-4">
@@ -177,7 +193,7 @@ function ProductCartCard({ product }) {
 			</div>
 			<div className="flex flex-col ">
 				<div className="my-2 text-right text-lg font-bold text-[var(--color-one)] ">
-					إجمالي سعر المنتج : {totalPriceOfProduct()} ج.م
+					إجمالي سعر المنتج : {totalPriceOfProduct} ج.م
 				</div>
 				<button
 					onClick={onRemove}

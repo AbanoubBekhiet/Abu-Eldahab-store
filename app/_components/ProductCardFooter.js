@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
 import { deleteCartProduct, updateCartProduct } from "../_libs/APIs";
 import { removeFromCart, updateItem } from "../store/cartSlice";
+import { useMemo } from "react";
 function ProductCardFooter({ product, user }) {
 	const dispatch = useDispatch();
 	const items = useSelector((state) => state.cart.items);
@@ -47,81 +48,98 @@ function ProductCardFooter({ product, user }) {
 		toast.success("تم إزالة المنتج من السلة");
 	}
 	function onDecreasePackets() {
-		if (existingItem?.number_of_packets === 0) {
+		if (existingItem?.number_of_packets <= 0) {
 			toast.warn("عدد العبوات صفر بالفعل");
-		} else {
-			dispatch(
-				updateItem({
-					product_id: existingItem?.product_id,
-					number_of_packets: existingItem?.number_of_packets - 1,
-					number_of_pieces: existingItem?.number_of_pieces,
-				}),
-			);
-			updateCartProduct(
-				existingItem?.product_id,
-				existingItem?.user_id,
-				existingItem?.number_of_packets - 1,
-				existingItem?.number_of_pieces,
-			);
+			return;
 		}
+
+		const nextValue = existingItem.number_of_packets - 1;
+
+		dispatch(
+			updateItem({
+				product_id: existingItem.product_id,
+				number_of_packets: nextValue,
+				number_of_pieces: existingItem.number_of_pieces,
+			}),
+		);
+		updateCartProduct(
+			existingItem.product_id,
+			existingItem.user_id,
+			nextValue,
+			existingItem.number_of_pieces,
+		);
 	}
+
 	function onIncreasePackets() {
+		const nextValue = (existingItem?.number_of_packets || 0) + 1;
+
 		dispatch(
 			updateItem({
-				product_id: existingItem?.product_id,
-				number_of_packets: existingItem?.number_of_packets + 1,
-				number_of_pieces: existingItem?.number_of_pieces,
+				product_id: existingItem.product_id,
+				number_of_packets: nextValue,
+				number_of_pieces: existingItem.number_of_pieces,
 			}),
 		);
 
 		updateCartProduct(
-			existingItem?.product_id,
-			existingItem?.user_id,
-			existingItem?.number_of_packets + 1,
-			existingItem?.number_of_pieces,
+			existingItem.product_id,
+			existingItem.user_id,
+			nextValue,
+			existingItem.number_of_pieces,
 		);
 	}
+
 	function onDecreasePieces() {
-		if (existingItem?.number_of_pieces === 0) {
+		if (existingItem?.number_of_pieces <= 0) {
 			toast.warn("عدد القطع صفر بالفعل");
-		} else {
-			dispatch(
-				updateItem({
-					product_id: existingItem?.product_id,
-					number_of_packets: existingItem?.number_of_packets,
-					number_of_pieces: existingItem?.number_of_pieces - 1,
-				}),
-			);
-			updateCartProduct(
-				existingItem?.product_id,
-				existingItem?.user_id,
-				existingItem?.number_of_packets,
-				existingItem?.number_of_pieces - 1,
-			);
+			return;
 		}
-	}
-	function onIncreasePieces() {
+
+		const nextValue = existingItem.number_of_pieces - 1;
+
 		dispatch(
 			updateItem({
-				product_id: existingItem?.product_id,
-				number_of_packets: existingItem?.number_of_packets,
-				number_of_pieces: existingItem?.number_of_pieces + 1,
+				product_id: existingItem.product_id,
+				number_of_packets: existingItem.number_of_packets,
+				number_of_pieces: nextValue,
+			}),
+		);
+		updateCartProduct(
+			existingItem.product_id,
+			existingItem.user_id,
+			existingItem.number_of_packets,
+			nextValue,
+		);
+	}
+
+	function onIncreasePieces() {
+		const nextValue = (existingItem?.number_of_pieces || 0) + 1;
+
+		dispatch(
+			updateItem({
+				product_id: existingItem.product_id,
+				number_of_packets: existingItem.number_of_packets,
+				number_of_pieces: nextValue,
 			}),
 		);
 
 		updateCartProduct(
-			existingItem?.product_id,
-			existingItem?.user_id,
-			existingItem?.number_of_packets,
-			existingItem?.number_of_pieces + 1,
+			existingItem.product_id,
+			existingItem.user_id,
+			existingItem.number_of_packets,
+			nextValue,
 		);
 	}
-	function totalPriceOfProduct() {
-		return (
-			existingItem?.number_of_pieces * existingItem?.price_of_piece +
-			existingItem?.number_of_packets * existingItem?.price_of_packet
-		);
-	}
+
+	const totalPriceOfProduct = useMemo(() => {
+		if (!existingItem) return 0;
+		const total =
+			(existingItem.number_of_pieces || 0) *
+				(existingItem.price_of_piece || 0) +
+			(existingItem.number_of_packets || 0) *
+				(existingItem.price_of_packet || 0);
+		return Number(total.toFixed(2));
+	}, [existingItem]);
 	return (
 		<CardFooter>
 			{product?.available ? (
@@ -151,21 +169,20 @@ function ProductCardFooter({ product, user }) {
 									<div>
 										<div className="flex items-center justify-around flex-wrap gap-2 rounded-lg border border-[var(--color-one)] text-[var(--color-one)] p-2 mb-4">
 											<button
-												onClick={onDecreasePieces}
+												onClick={onIncreasePieces}
 												className="rounded-md bg-gray-100 p-1 hover:bg-gray-200"
 											>
-												<Minus size={16} />
+												<Plus size={16} />
 											</button>
-
 											<span className="min-w-[24px] text-center text-lg font-bold">
 												{existingItem?.number_of_pieces} قطعة
 											</span>
 
 											<button
-												onClick={onIncreasePieces}
+												onClick={onDecreasePieces}
 												className="rounded-md bg-gray-100 p-1 hover:bg-gray-200"
 											>
-												<Plus size={16} />
+												<Minus size={16} />
 											</button>
 										</div>
 									</div>
@@ -174,7 +191,7 @@ function ProductCardFooter({ product, user }) {
 						</div>
 						<div className="flex flex-col ">
 							<div className="my-2 text-right text-lg font-bold text-[var(--color-one)] ">
-								إجمالي سعر المنتج : {totalPriceOfProduct()} ج.م
+								الإجمالي : {totalPriceOfProduct} ج.م
 							</div>
 							<button
 								onClick={onRemove}

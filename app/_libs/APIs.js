@@ -11,7 +11,7 @@ async function getAuthUserId() {
 }
 
 export async function getProductsWithPagintion(params) {
-	const limit = 15;
+	const limit = 30;
 	const page = parseInt(params.page) || 1;
 	const from = (page - 1) * limit;
 	const to = from + limit - 1;

@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import AuthLoader from "./_libs/AuthLoader";
 import { Analytics } from "@vercel/analytics/next";
 import WhatsUpContact from "./_components/whatsUpContact";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata = {
 	title: {
 		template: "%s | متجر ابو الدهب",

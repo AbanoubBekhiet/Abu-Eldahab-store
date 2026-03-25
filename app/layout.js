@@ -18,6 +18,9 @@ export const metadata = {
 	verification: {
 		google: "tQMqyEQB3Q73XwZHx9spm4bfQiUcioaOaNnsJiuzKHA",
 	},
+	other: {
+		"google-adsense-account": "ca-pub-1695203399756090",
+	},
 };
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

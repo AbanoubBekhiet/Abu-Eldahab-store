@@ -7,7 +7,8 @@ import { ToastContainer } from "react-toastify";
 import AuthLoader from "./_libs/AuthLoader";
 import { Analytics } from "@vercel/analytics/next";
 import WhatsUpContact from "./_components/whatsUpContact";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 export const metadata = {
 	title: {
 		template: "%s | متجر ابو الدهب",
@@ -43,6 +44,8 @@ export default async function RootLayout({ children }) {
 						theme="light"
 					/>
 					<Analytics />
+					<SpeedInsights />
+					<GoogleAnalytics gaId="G-T844GKQWR1" />
 					<WhatsUpContact />
 				</Providers>
 			</body>

@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/next";
 import WhatsUpContact from "./_components/whatsUpContact";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 export const metadata = {
 	title: {
 		template: "%s | متجر ابو الدهب",
@@ -25,6 +26,14 @@ export default async function RootLayout({ children }) {
 	const user = await getUserData();
 	return (
 		<html lang="en">
+			<head>
+				<Script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1695203399756090"
+					crossorigin="anonymous"
+					strategy="afterInteractive"
+				/>
+			</head>
 			<body className="flex flex-col min-h-screen">
 				<Providers>
 					<AuthLoader />

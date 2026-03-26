@@ -10,6 +10,9 @@ const nextConfig = {
 				port: "",
 				pathname: "/storage/v1/object/public/**",
 			},
+				images: {
+		unoptimized: true,
+	},
 		],
 	},
 };

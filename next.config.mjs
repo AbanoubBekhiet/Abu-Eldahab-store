@@ -3,15 +3,13 @@ const nextConfig = {
 	/* config options here */
 	reactCompiler: true,
 	images: {
+		unoptimized: true,
 		remotePatterns: [
 			{
 				protocol: "https",
 				hostname: "vyojzehexdatndltudup.supabase.co",
 				port: "",
 				pathname: "/storage/v1/object/public/**",
-			},
-			{
-				unoptimized: true,
 			},
 		],
 	},

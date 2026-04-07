@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+
 export async function GET(request) {
 	const { searchParams, origin } = new URL(request.url);
 	const code = searchParams.get("code");
@@ -7,13 +8,10 @@ export async function GET(request) {
 	const returnTo = searchParams.get("returnTo");
 
 	if (!code) {
-		return NextResponse.redirect(`${origin}/login`);
+		return NextResponse.redirect(`${origin}/auth/signin`);
 	}
-	let targetUrl = `${origin}`;
-	if (returnTo) {
-		targetUrl = `${origin}/profile/info?returnTo=${encodeURIComponent(returnTo)}`;
-	}
-	const response = NextResponse.redirect(targetUrl);
+
+	let cookiesToSet = [];
 
 	const supabaseServer = createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -22,15 +20,41 @@ export async function GET(request) {
 			cookies: {
 				getAll: () => request.cookies.getAll(),
 				setAll: (cookies) => {
-					cookies.forEach(({ name, value, options }) => {
-						response.cookies.set(name, value, options);
-					});
+					cookiesToSet = cookies;
 				},
 			},
 		},
 	);
 
-	await supabaseServer.auth.exchangeCodeForSession(code);
+	const {
+		data: { session },
+	} = await supabaseServer.auth.exchangeCodeForSession(code);
+
+	let targetUrl = `${origin}/products`;
+
+	if (session?.user) {
+		const { data: profile } = await supabaseServer
+			.from("profiles")
+			.select("phone")
+			.eq("id", session.user.id)
+			.maybeSingle();
+
+		if (!profile?.phone) {
+			targetUrl = `${origin}/profile/info?returnTo=${encodeURIComponent(
+				returnTo || "/products"
+			)}`;
+		} else if (returnTo) {
+			targetUrl = `${origin}${returnTo}`;
+		}
+	} else {
+		targetUrl = `${origin}/auth/signin`;
+	}
+
+	const response = NextResponse.redirect(targetUrl);
+
+	cookiesToSet.forEach(({ name, value, options }) => {
+		response.cookies.set(name, value, options);
+	});
 
 	return response;
 }

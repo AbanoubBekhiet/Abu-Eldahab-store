@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfileData } from "@/app/_libs/APIs";
 import { toast } from "react-toastify";
 import { setUser } from "@/app/store/authSlice";
+import { useRouter } from "next/navigation";
 
 
 
@@ -55,6 +56,7 @@ const formSchema = z.object({
 export default function Page() {
 	const dispatch = useDispatch();
 	const userProfile = useSelector((state) => state.auth);
+	const router = useRouter();
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -71,6 +73,13 @@ export default function Page() {
 			const result = await updateProfileData(data);
 			dispatch(setUser(result));
 			toast.success("تم تحديث بياناتك بنجاح");
+			const searchParams = new URLSearchParams(window.location.search);
+			const returnTo = searchParams.get("returnTo");
+			setTimeout(() => {
+				if (returnTo) {
+					router.push(returnTo);
+				}
+			}, 300);
 		} catch (error) {
 			toast.error("حدث خطأ أثناء التحديث");
 		}

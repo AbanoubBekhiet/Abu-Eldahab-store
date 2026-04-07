@@ -111,7 +111,7 @@ function ProductCartCard({ product }) {
 		return Number(total.toFixed(2));
 	}, [product]);
 	return (
-		<div className="w-rounded-xl border border-gray-200 bg-white p-5 shadow-xl rounded-2xl h-96">
+		<div className="w-rounded-xl border border-gray-200 bg-white p-5 shadow-xl rounded-2xl flex flex-col justify-between">
 			<div className="flex items-start justify-between gap-3">
 				<div className="flex-1 text-right">
 					<h3 className="text-xl font-bold text-gray-800 w-20">

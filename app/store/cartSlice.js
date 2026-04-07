@@ -13,10 +13,11 @@ const cartSlice = createSlice({
 			state.items = action.payload;
 		},
 		addToCart: (state, action) => {
-			const item = state.items.find((i) => i.id === action.payload.id);
+			const item = state.items.find((i) => i.product_id === action.payload.id);
+			// console.log("Adding to cart:", action.payload);
 			if (!item)
 				state.items.push({
-					user_id: action.payload.id,
+					user_id: action.payload.user_id,
 					number_of_packets: 1,
 					number_of_pieces: 0,
 					price_of_piece: action.payload.price_of_piece,

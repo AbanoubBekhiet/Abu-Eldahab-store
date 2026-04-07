@@ -4,10 +4,15 @@ import { Button } from "@/components/ui/button";
 import { FaGoogle } from "react-icons/fa";
 function Signin() {
 	const signIn = async () => {
+		const searchParams = new URLSearchParams(window.location.search);
+		const returnTo = searchParams.get("returnTo");
+		let redirectUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`;
+		if (returnTo) redirectUrl += `?returnTo=${encodeURIComponent(returnTo)}`;
+
 		await supabase.auth.signInWithOAuth({
 			provider: "google",
 			options: {
-				redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+				redirectTo: redirectUrl,
 			},
 		});
 	};

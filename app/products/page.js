@@ -13,17 +13,21 @@ export const metadata = {
 
 async function page({ searchParams }) {
 	const params = await searchParams;
-	const [products, categories] = await Promise.all([
+	const [productsData, categories] = await Promise.all([
 		getProductsWithPagintion(params),
 		getCategories(),
 	]);
+	const { products, count, limit } = productsData;
+	const totalPages = Math.ceil((count || 0) / limit) || 1;
+	const currentPage = parseInt(params?.page) || 1;
+
 	return (
 		<div className="w-full">
 			<ProductsFilter categories={categories} />
 			<Suspense fallback={<Spinner />} key={products}>
 				<ProductsList products={products} />
 			</Suspense>
-			<ProductsPagination productsLength={products.length} params={params} />
+			<ProductsPagination productsLength={products.length} totalPages={totalPages} currentPage={currentPage} />
 		</div>
 	);
 }

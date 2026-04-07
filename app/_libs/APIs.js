@@ -18,7 +18,7 @@ export async function getProductsWithPagintion(params) {
 
 	const categoryName = params.filter;
 	const searchQuery = params.search;
-	let query = supabase.from("products").select("*,categories!inner(name)");
+	let query = supabase.from("products").select("*,categories!inner(name)", { count: "exact" });
 
 	if (categoryName && categoryName !== "كل المنتجات") {
 		query = query.eq("categories.name", categoryName);
@@ -27,12 +27,12 @@ export async function getProductsWithPagintion(params) {
 	if (searchQuery && searchQuery !== "لا يوجد") {
 		query = query.ilike("name", `%${searchQuery}%`);
 	}
-	const { data: products, error } = await query
+	const { data: products, count, error } = await query
 		.order("incre_id", { ascending: true })
 		.range(from, to);
 
 	if (error) throw new Error(error.message);
-	return products;
+	return { products, count, limit };
 }
 export async function getProductsForSpecificCategory(
 	category_id,

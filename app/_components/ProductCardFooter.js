@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { insertCartProduct } from "../_libs/APIs";
 import { addToCart } from "../store/cartSlice";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { deleteCartProduct, updateCartProduct } from "../_libs/APIs";
 import { removeFromCart, updateItem } from "../store/cartSlice";
 import { useMemo } from "react";
 function ProductCardFooter({ product, user }) {
 	const dispatch = useDispatch();
 	const items = useSelector((state) => state.cart.items);
+	const router = useRouter();
 	function isItemExisted() {
 		return items.some((item) => item.product_id === product.id);
 	}
@@ -28,11 +29,12 @@ function ProductCardFooter({ product, user }) {
 				if (!user) {
 					toast.info("يجب تسجيل الدخول لإضافة منتجات إلي السلة");
 					setTimeout(() => {
-						redirect("/auth/signin");
+						const currentPath = window.location.pathname + window.location.search;
+						router.push(`/auth/signin?returnTo=${encodeURIComponent(currentPath)}`);
 					}, 300);
 				} else {
 					await insertCartProduct(user.id, product);
-					dispatch(addToCart(product));
+					dispatch(addToCart({ ...product, user_id: user.id }));
 					toast.success("تم إضافة المنتج للسلة بنجاح");
 				}
 			} else {

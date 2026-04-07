@@ -4,11 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const PAGE_LIMIT = 30;
 
-function ProductsPagination({ productsLength }) {
+function ProductsPagination({ productsLength, totalPages, currentPage }) {
     const router = useRouter();
-    const searchParams = useSearchParams(); 
-    
-    const currentPage = parseInt(searchParams.get("page")) || 1;
+    const searchParams = useSearchParams();
 
     function createPageURL(pageNumber) {
         const params = new URLSearchParams(searchParams);
@@ -17,7 +15,11 @@ function ProductsPagination({ productsLength }) {
     }
 
     function handleNextPage() {
-        if (productsLength < PAGE_LIMIT) return;
+        if (totalPages !== undefined) {
+            if (currentPage >= totalPages) return;
+        } else {
+            if (productsLength < PAGE_LIMIT) return;
+        }
         router.push(createPageURL(currentPage + 1));
     }
 
@@ -37,12 +39,12 @@ function ProductsPagination({ productsLength }) {
             </button>
 
             <span className="text-lg font-bold text-[var(--color-one)]">
-                صفحة {currentPage}
+                صفحة {currentPage} من {totalPages || 1}
             </span>
 
             <button
                 className="p-3 bg-[var(--color-one)] text-white rounded-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                disabled={productsLength < PAGE_LIMIT}
+                disabled={totalPages !== undefined ? currentPage >= totalPages : productsLength < PAGE_LIMIT}
                 onClick={handleNextPage}
             >
                 <ChevronLeft size={24} />

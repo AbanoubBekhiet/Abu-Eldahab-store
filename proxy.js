@@ -2,34 +2,67 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
 export async function proxy(request) {
-	let response = NextResponse.next();
+	let supabaseResponse = NextResponse.next({
+		request,
+	});
 
 	const supabase = createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 		{
 			cookies: {
-				getAll: () => request.cookies.getAll(),
-				setAll: (cookies) => {
-					cookies.forEach(({ name, value, options }) => {
-						response.cookies.set(name, value, options);
+				getAll() {
+					return request.cookies.getAll();
+				},
+				setAll(cookiesToSet) {
+					cookiesToSet.forEach(({ name, value }) =>
+						request.cookies.set(name, value),
+					);
+					supabaseResponse = NextResponse.next({
+						request,
 					});
+					cookiesToSet.forEach(({ name, value, options }) =>
+						supabaseResponse.cookies.set(name, value, options),
+					);
 				},
 			},
 		},
 	);
 
+	// IMPORTANT: Do NOT add any logic between createServerClient and
+	// supabase.auth.getUser(). A simple mistake could make it very hard to debug
+	// issues with users being randomly logged out.
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	if (!user) {
-		return NextResponse.redirect(new URL("/auth/signin", request.url));
+	// Redirect to sign-in only for protected routes
+	const protectedPaths = ["/cart", "/profile"];
+	const isProtectedRoute = protectedPaths.some((path) =>
+		request.nextUrl.pathname.startsWith(path),
+	);
+
+	if (!user && isProtectedRoute) {
+		const returnTo = request.nextUrl.pathname + request.nextUrl.search;
+		const loginUrl = new URL(
+			`/auth/signin?returnTo=${encodeURIComponent(returnTo)}`,
+			request.url,
+		);
+		return NextResponse.redirect(loginUrl);
 	}
 
-	return response;
+	return supabaseResponse;
 }
 
 export const config = {
-	matcher: ["/cart", "/profile/:path*"],
+	matcher: [
+		/*
+		 * Match all request paths except for the ones starting with:
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 * - public files with extensions
+		 */
+		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+	],
 };

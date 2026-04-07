@@ -10,10 +10,13 @@ import { useRouter } from "next/navigation";
 import { deleteCartProduct, updateCartProduct } from "../_libs/APIs";
 import { removeFromCart, updateItem } from "../store/cartSlice";
 import { useMemo } from "react";
-function ProductCardFooter({ product, user }) {
+import { useSupabaseUser } from "../hooks/useSupabaseUser";
+function ProductCardFooter({ product, user: initialUser }) {
 	const dispatch = useDispatch();
 	const items = useSelector((state) => state.cart.items);
 	const router = useRouter();
+	const clientUser = useSupabaseUser(initialUser);
+	const user = clientUser || initialUser;
 	function isItemExisted() {
 		return items.some((item) => item.product_id === product.id);
 	}
@@ -42,6 +45,7 @@ function ProductCardFooter({ product, user }) {
 			}
 		} catch (error) {
 			console.error("Failed to add product to cart:", error);
+			toast.error("حدث خطأ أثناء إضافة المنتج للسلة");
 		}
 	};
 	function onRemove() {

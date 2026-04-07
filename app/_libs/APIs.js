@@ -60,7 +60,7 @@ export async function getCategories() {
 
 export async function getCart(user_id) {
 	try {
-		const { data: cart, error } = await supabase
+		const { data: cart, error } = await clientBrowser
 			.from("cart")
 			.select(
 				`
@@ -92,7 +92,7 @@ export async function getCart(user_id) {
 }
 
 export async function insertCartProduct(user_id, product) {
-	const { data, error } = await supabase.from("cart").insert([
+	const { data, error } = await clientBrowser.from("cart").insert([
 		{
 			user_id: user_id,
 			product_id: product.id,
@@ -117,7 +117,7 @@ export async function updateCartProduct(
 	number_of_pieces,
 ) {
 	try {
-		const { data, error } = await supabase
+		const { data, error } = await clientBrowser
 			.from("cart")
 			.update({
 				number_of_packets: number_of_packets,
@@ -133,7 +133,7 @@ export async function updateCartProduct(
 }
 
 export async function deleteCartProduct(product_id, user_id) {
-	const { error } = await supabase
+	const { error } = await clientBrowser
 		.from("cart")
 		.delete()
 		.eq("product_id", product_id)

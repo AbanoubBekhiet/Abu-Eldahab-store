@@ -14,12 +14,11 @@ export default async function sitemap() {
 	try {
 		const categories = await getCategories();
 		const categoryRoutes = categories.map((cat) => ({
-			url: `${baseUrl}/products?filter=${encodeURIComponent(cat.name)}&search=${encodeURIComponent("لا يوجد")}&page=1`,
+			url: `${baseUrl}/products?filter=${encodeURIComponent(cat.name)}&amp;search=${encodeURIComponent("لا يوجد")}&amp;page=1`,
 			lastModified: new Date(),
 			changeFrequency: "weekly",
 			priority: 0.6,
 		}));
-
 		return [...staticRoutes, ...categoryRoutes];
 	} catch (error) {
 		console.error("Sitemap generation error:", error);

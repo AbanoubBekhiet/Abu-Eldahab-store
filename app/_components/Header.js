@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../_libs/browser-client";
 import { useRouter } from "next/navigation";
 import { useSupabaseUser } from "../hooks/useSupabaseUser";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../_libs/APIs";
 import { setCart } from "../store/cartSlice";
 import { logout } from "../store/authSlice";
@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 function Header({ initialUser }) {
 	const dispatch = useDispatch();
 	const user = useSupabaseUser(initialUser);
+	const cartItemsCount = useSelector((state) => state.cart.items.length);
 	useEffect(() => {
 		async function fetchCart() {
 			if (user) {
@@ -73,8 +74,13 @@ function Header({ initialUser }) {
 				<Link href="/profile/info" title="الملف الشخصي">
 					<CircleUserRound className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
 				</Link>
-				<Link href="/cart" title="سلة المشتريات">
+				<Link href="/cart" title="سلة المشتريات" className="relative group">
 					<ShoppingCart className="text-[var(--color-one)] hover:text-[var(--color-four)] transition duration-700 ease-in-out" />
+					{cartItemsCount > 0 && (
+						<span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[var(--color-two)] shadow-sm group-hover:bg-red-700 transition-colors">
+							{cartItemsCount}
+						</span>
+					)}
 				</Link>
 				{user ? (
 					<button

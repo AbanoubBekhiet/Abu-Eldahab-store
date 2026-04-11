@@ -31,13 +31,13 @@ function Footer() {
 						<Link href="/categories">الفئات</Link>
 					</li>
 					<li>
-						<Link href="/offers">العروض</Link>
-					</li>
-					<li>
-						<Link href="/profile">الملف الشخصي</Link>
+						<Link href="/profile/info">الملف الشخصي</Link>
 					</li>
 					<li>
 						<Link href="/cart">سلة المشتريات</Link>
+					</li>
+					<li>
+						<Link href="/contact">تواصل معنا</Link>
 					</li>
 				</ul>
 			</div>

@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /wp-admin/
-Disallow: /tmp/
-Allow: /
-
-Sitemap: https://abu-eldahab.vercel.app/sitemap.xml

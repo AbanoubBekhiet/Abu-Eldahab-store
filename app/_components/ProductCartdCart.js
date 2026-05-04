@@ -26,6 +26,11 @@ function ProductCartCard({ product }) {
 
 		const nextValue = product.number_of_packets - 1;
 
+		if (nextValue === 0 && (product.number_of_pieces || 0) === 0) {
+			onRemove();
+			return;
+		}
+
 		dispatch(
 			updateItem({
 				product_id: product.product_id || product.id,
@@ -67,6 +72,11 @@ function ProductCartCard({ product }) {
 		}
 
 		const nextValue = product.number_of_pieces - 1;
+
+		if (nextValue === 0 && (product.number_of_packets || 0) === 0) {
+			onRemove();
+			return;
+		}
 
 		dispatch(
 			updateItem({

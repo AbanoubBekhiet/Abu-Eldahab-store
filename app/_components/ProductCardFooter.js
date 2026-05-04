@@ -9,9 +9,10 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { deleteCartProduct, updateCartProduct } from "../_libs/APIs";
 import { removeFromCart, updateItem } from "../store/cartSlice";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSupabaseUser } from "../hooks/useSupabaseUser";
 function ProductCardFooter({ product, user: initialUser }) {
+	const [isAdding, setIsAdding] = useState(false);
 	const dispatch = useDispatch();
 	const items = useSelector((state) => state.cart.items);
 	const router = useRouter();
@@ -26,6 +27,7 @@ function ProductCardFooter({ product, user: initialUser }) {
 		existingItem = items.find((item) => item.product_id === product.id);
 	}
 	const handleAddToCart = async () => {
+		if (isAdding) return;
 		try {
 			const existed = isItemExisted();
 			if (existed === false) {
@@ -36,6 +38,7 @@ function ProductCardFooter({ product, user: initialUser }) {
 						router.push(`/auth/signin?returnTo=${encodeURIComponent(currentPath)}`);
 					}, 300);
 				} else {
+					setIsAdding(true);
 					await insertCartProduct(user.id, product);
 					dispatch(addToCart({ ...product, user_id: user.id }));
 					toast.success("تم إضافة المنتج للسلة بنجاح");
@@ -46,6 +49,8 @@ function ProductCardFooter({ product, user: initialUser }) {
 		} catch (error) {
 			console.error("Failed to add product to cart:", error);
 			toast.error("حدث خطأ أثناء إضافة المنتج للسلة");
+		} finally {
+			setIsAdding(false);
 		}
 	};
 	function onRemove() {
@@ -60,6 +65,11 @@ function ProductCardFooter({ product, user: initialUser }) {
 		}
 
 		const nextValue = existingItem.number_of_packets - 1;
+
+		if (nextValue === 0 && (existingItem.number_of_pieces || 0) === 0) {
+			onRemove();
+			return;
+		}
 
 		dispatch(
 			updateItem({
@@ -102,6 +112,11 @@ function ProductCardFooter({ product, user: initialUser }) {
 		}
 
 		const nextValue = existingItem.number_of_pieces - 1;
+
+		if (nextValue === 0 && (existingItem.number_of_packets || 0) === 0) {
+			onRemove();
+			return;
+		}
 
 		dispatch(
 			updateItem({
@@ -211,12 +226,13 @@ function ProductCardFooter({ product, user: initialUser }) {
 				) : (
 					<Button
 						onClick={handleAddToCart}
+						disabled={isAdding}
 						variant="outline"
 						size="lg"
 						className="bg-[var(--color-one)] text-[var(--color-four)] text-1.5xl font-bold"
 					>
 						<ShoppingCart />
-						اضف للسلة
+						{isAdding ? "جاري الإضافة..." : "اضف للسلة"}
 					</Button>
 				)
 			) : (

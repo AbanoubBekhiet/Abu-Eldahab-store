@@ -31,8 +31,12 @@ function Cart() {
     }
 
     async function handleMakingOrder() {
+        if (isProcessing) return;
+        setIsProcessing(true);
+
         if (!user_data?.phone || !user_data?.address || !user_data?.shop_name) {
             toast.error("استكمل بيانات التوصيل اولا في حسابك");
+            setIsProcessing(false);
             setTimeout(() => {
                 router.push("/profile/info");
             }, 300);
@@ -41,12 +45,11 @@ function Cart() {
 
         if (items.length === 0) {
             toast.error("لا يوجد منتجات في السلة");
+            setIsProcessing(false);
             return;
         }
 
         try {
-            setIsProcessing(true);
-
             const total_price = parseFloat(calculateTotalPriceOfOrder());
             await makeOrder(total_price, items);
             await deleteCartItems();
@@ -60,8 +63,6 @@ function Cart() {
         } catch (error) {
             console.error("Order failed:", error);
             toast.error("حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.");
-        } finally {
-            // إعادة تفعيل الزر في حالة الفشل فقط (لأن النجاح سينتقل لصفحة أخرى)
             setIsProcessing(false);
         }
     }
